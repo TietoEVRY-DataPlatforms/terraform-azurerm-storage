@@ -48,12 +48,6 @@ resource "azurerm_storage_account" "storeacc" {
     type = var.assign_identity ? "SystemAssigned" : null
   }
 
-  blob_properties {
-    delete_retention_policy {
-      days = var.soft_delete_retention
-    }
-  }
-
   dynamic "network_rules" {
     for_each = var.network_rules != null ? ["true"] : []
     content {
@@ -61,6 +55,32 @@ resource "azurerm_storage_account" "storeacc" {
       bypass                     = var.network_rules.bypass
       ip_rules                   = var.network_rules.ip_rules
       virtual_network_subnet_ids = var.network_rules.subnet_ids
+    }
+  }
+
+  dynamic "blob_properties" {
+    for_each = var.blob_properties != null ? [1] : []
+
+    content {
+      dynamic "delete_retention_policy" {
+        for_each = var.blob_properties.delete_retention_policy != null ? [1] : []
+
+        content {
+          days = var.blob_properties.delete_retention_policy.days
+        }
+      }
+
+      dynamic "cors_rule" {
+        for_each = var.blob_properties.cors_rule != null ? var.blob_properties.cors_rule : []
+
+        content {
+          allowed_headers    = cors_rule.value.allowed_headers
+          allowed_methods    = cors_rule.value.allowed_methods
+          allowed_origins    = cors_rule.value.allowed_origins
+          exposed_headers    = cors_rule.value.exposed_headers
+          max_age_in_seconds = cors_rule.value.max_age_in_seconds
+        }
+      }
     }
   }
 }

@@ -43,11 +43,6 @@ variable "assign_identity" {
   default     = true
 }
 
-variable "soft_delete_retention" {
-  description = "Number of retention days for soft delete. If set to null it will disable soft delete all together."
-  default     = 30
-}
-
 variable "enable_advanced_threat_protection" {
   description = "Boolean flag which controls if advanced threat protection is enabled."
   default     = false
@@ -82,6 +77,7 @@ variable "tables" {
   type        = list(string)
   default     = []
 }
+
 variable "lifecycles" {
   description = "Configure Azure Storage firewalls and virtual networks"
   type        = list(object({ prefix_match = set(string), tier_to_cool_after_days = number, tier_to_archive_after_days = number, delete_after_days = number, snapshot_delete_after_days = number }))
@@ -92,4 +88,27 @@ variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
+}
+
+variable "blob_properties" {
+  type = object({
+    delete_retention_policy = optional(
+      object({
+        days = optional(number, null)
+      }), { days = 30 }
+    )
+
+    cors_rule = optional(
+      list(object({
+        allowed_headers    = list(string)
+        allowed_methods    = list(string)
+        allowed_origins    = optional(list(string), [])
+        exposed_headers    = optional(list(string), [])
+        max_age_in_seconds = optional(number, 600)
+        })
+    ))
+  })
+
+  default     = null
+  description = "CORS rule to apply"
 }
