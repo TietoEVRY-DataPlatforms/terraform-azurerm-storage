@@ -221,7 +221,7 @@ module "key-vault" {
   }
 }  
 ```
-
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -309,6 +309,7 @@ Name | Description
 `file_shares`|The list of SMB file shares
 `tables`|The list of storage tables
 `queues`|The list of storage queues
+<!-- END_TF_DOCS -->
 
 ## Resource Graph
 
