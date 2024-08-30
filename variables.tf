@@ -33,6 +33,11 @@ variable "access_tier" {
   default     = "Hot"
 }
 
+variable "cross_tenant_replication_enabled" {
+  description = "Should cross Tenant replication be enabled?"
+  default     = false
+}
+
 variable "min_tls_version" {
   description = "The minimum supported TLS version for the storage account"
   default     = "TLS1_2"
