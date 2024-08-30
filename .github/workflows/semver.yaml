@@ -18,4 +18,4 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true   
         DEFAULT_BUMP: patch
-        INITIAL_VERSION: 6.0.0
+        INITIAL_VERSION: 3.0.0
